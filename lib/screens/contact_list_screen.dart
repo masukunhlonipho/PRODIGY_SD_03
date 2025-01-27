@@ -4,7 +4,6 @@ import '../providers/contact_provider.dart';
 import 'add_contact_screen.dart';
 import 'update_contact_screen.dart';
 
-
 class ContactListScreen extends StatelessWidget {
   const ContactListScreen({super.key});
 
@@ -27,8 +26,9 @@ class ContactListScreen extends StatelessWidget {
           if (contacts.isEmpty) {
             return Center(
               child: contactProvider.contacts.isEmpty
-                  ? CircularProgressIndicator()  // Display progress indicator when contacts are loading
-                  : Text('No contacts available. Add some!', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  ? CircularProgressIndicator() // Display progress indicator when contacts are loading
+                  : Text('No contacts available. Add some!',
+                      style: TextStyle(fontSize: 18, color: Colors.grey)),
             );
           }
 
@@ -51,7 +51,8 @@ class ContactListScreen extends StatelessWidget {
 
                   // Trigger UI update if contact was updated or deleted
                   if (result == true) {
-                    contactProvider.fetchContacts(); // Refresh the list after an operation
+                    contactProvider
+                        .fetchContacts(); // Refresh the list after an operation
                   }
                 },
                 child: Card(

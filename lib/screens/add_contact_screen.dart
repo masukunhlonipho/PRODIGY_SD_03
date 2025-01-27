@@ -11,7 +11,8 @@ class AddContactScreen extends StatelessWidget {
   AddContactScreen({super.key});
 
   void _addContact(BuildContext context) {
-    final contactProvider = Provider.of<ContactProvider>(context, listen: false);
+    final contactProvider =
+        Provider.of<ContactProvider>(context, listen: false);
 
     final contact = Contact(
       name: _nameController.text,
@@ -43,7 +44,7 @@ class AddContactScreen extends StatelessWidget {
             ),
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(labelText: 'Email Address'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
