@@ -12,13 +12,21 @@ class AddContactScreen extends StatelessWidget {
 
   void _addContact(BuildContext context) {
     final contactProvider =
-        Provider.of<ContactProvider>(context, listen: false);
+    Provider.of<ContactProvider>(context, listen: false);
 
     final contact = Contact(
       name: _nameController.text,
       phoneNumber: _phoneController.text,
       email: _emailController.text,
     );
+
+    // Simple validation
+    if (_nameController.text.isEmpty || _phoneController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Name and Phone Number are required!'),
+      ));
+      return;
+    }
 
     contactProvider.addContact(contact);
     Navigator.pop(context);
@@ -29,6 +37,9 @@ class AddContactScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Contact'),
+        leading: BackButton(
+          color: Colors.white,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

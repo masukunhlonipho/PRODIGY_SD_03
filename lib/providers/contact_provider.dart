@@ -5,22 +5,34 @@ import '../models/contact.dart';
 
 class ContactProvider extends ChangeNotifier {
   List<Contact> _contacts = [];
+  bool _isFetching = false;  // State to track if contacts are being fetched
 
   List<Contact> get contacts => _contacts;
 
+  bool get isFetching => _isFetching;
+
   // Fetch contacts from local storage (SharedPreferences)
   Future<void> fetchContacts() async {
+    if (_isFetching) return;  // Prevent fetching if already fetching
+
     try {
+      _isFetching = true; // Mark as fetching
+      notifyListeners(); // Notify listeners that the state is changing
+
       final prefs = await SharedPreferences.getInstance();
       final String? contactsString = prefs.getString('contacts');
       if (contactsString != null) {
         List<dynamic> contactsJson = json.decode(contactsString);
         _contacts = contactsJson.map((json) => Contact.fromJson(json)).toList();
       }
-      notifyListeners();
+
+      _isFetching = false; // Mark as done fetching
+      notifyListeners(); // Notify listeners after fetching is complete
     } catch (error) {
+      _isFetching = false; // Ensure we stop the fetching state even if an error occurs
       print('Error fetching contacts: $error');
-      // Optionally, you can show a Snackbar or some UI feedback here
+      // Optionally, show an error message or feedback to the user
+      notifyListeners();
     }
   }
 

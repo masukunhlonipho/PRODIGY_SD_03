@@ -35,20 +35,21 @@ class _UpdateContactScreenState extends State<UpdateContactScreen> {
       email: _emailController.text,
     );
 
+    if (_nameController.text.isEmpty || _phoneController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Name and Phone Number are required!'),
+      ));
+      return;
+    }
+
     contactProvider.updateContact(widget.index, updatedContact);
-    Navigator.pop(context, true); // Go back to the contact list with an update status
+    Navigator.pop(context, true);
   }
 
   void _deleteContact(BuildContext context) {
-    try {
-      final contactProvider = Provider.of<ContactProvider>(context, listen: false);
-      contactProvider.deleteContact(widget.index);
-      Navigator.of(context).pop(); // Close the confirmation dialog
-      Navigator.of(context).pop(true); // Close the UpdateContactScreen with a deletion status
-    } catch (e) {
-      print('Error deleting contact: $e');
-      // Here you might want to show an error message to the user
-    }
+    final contactProvider = Provider.of<ContactProvider>(context, listen: false);
+    contactProvider.deleteContact(widget.index);
+    Navigator.pop(context, true); // Close screen after deletion
   }
 
   @override
@@ -56,6 +57,9 @@ class _UpdateContactScreenState extends State<UpdateContactScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Update Contact'),
+        leading: BackButton(
+          color: Colors.white,
+        ),
         actions: [
           TextButton(
             onPressed: () => _showDeleteConfirmationDialog(context),
@@ -98,16 +102,17 @@ class _UpdateContactScreenState extends State<UpdateContactScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('Delete Contact'),
-        content: Text('Are you sure you want to delete this contact?'),
+        content: Text('Are you sure you want to delete this contact?',
+            style: TextStyle(color: Colors.red, fontSize: 17)),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(), // Close dialog
+            onPressed: () => Navigator.of(ctx).pop(),
             child: Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
               _deleteContact(context);
-              Navigator.of(ctx).pop(); // Close dialog
+              Navigator.of(ctx).pop();
             },
             child: Text(
               'Delete',
